@@ -229,6 +229,13 @@ MonoBehaviour:
   invulnerabilitytime: 2
   recallrotatespeed: 10
   maxrecallspeed: 0.05
+  prefabslimechunks: {fileID: 7430408181115695061, guid: 1c2fdb1ba8af7c543a7007128866fa01, type: 3}
+  sfxpop:
+    clip: {fileID: 8300000, guid: 969d2537d3e51854485103c691a3db7c, type: 3}
+    volume: 1
+  sfxjump:
+    clip: {fileID: 8300000, guid: 200b7cb2d142262428c4fa199b993820, type: 3}
+    volume: 1
 --- !u!143 &4023241420732051647
 CharacterController:
   m_ObjectHideFlags: 0

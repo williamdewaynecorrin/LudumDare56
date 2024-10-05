@@ -32,7 +32,7 @@ public class SlimeSplitter : MonoBehaviour
         PlayerSlime slime = collider.gameObject.GetComponent<PlayerSlime>();
         if (slime != null)
         {
-            slime.OnHit(transform.position, normalguess);
+            slime.OnHit(slime.transform.position, normalguess);
         }
     }
 }

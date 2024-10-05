@@ -17,8 +17,11 @@ public class PlayerSlimeManager : MonoBehaviour
     private List<PlayerSlimeRoot> slimes;
     private bool isrecalling = false;
     private Vector3 slimetarget;
+    private float slimemasstotal;
 
     public PlayerSlimeCamera Camera => camera;
+    public float SlimeMass => slimemasstotal;
+    public int SlimeCount => slimes.Count;
 
     void Awake()
     {
@@ -33,6 +36,8 @@ public class PlayerSlimeManager : MonoBehaviour
 
     void Update()
     {
+        UpdateStats();
+
         if (!isrecalling)
         {
             bool canrecall = true;
@@ -88,6 +93,16 @@ public class PlayerSlimeManager : MonoBehaviour
                     slimeroot.Slime.EndRecall();
                 }
             }
+        }
+    }
+
+    private void UpdateStats()
+    {
+        // -- update stats
+        slimemasstotal = 0.0f;
+        foreach(PlayerSlimeRoot slimeroot in slimes)
+        {
+            slimemasstotal += slimeroot.Slime.Mass;
         }
     }
 

@@ -78,6 +78,16 @@ public class PlayerSlime : MonoBehaviour
     [SerializeField]
     private float maxrecallspeed = 1.0f;
 
+    [Header("FX")]
+    [SerializeField]
+    private ParticleSlimeChunks prefabslimechunks;
+
+    [Header("SFX")]
+    [SerializeField]
+    private AudioClipWVol sfxpop;
+    [SerializeField]
+    private AudioClipWVol sfxjump;
+
     private Vector2 movementinput;
     private Vector3 currentvelocity;
     private Vector3 currentgravity;
@@ -306,6 +316,8 @@ public class PlayerSlime : MonoBehaviour
         jumpsquishtimer = jumpsquishtime;
 
         animator.CrossFadeInFixedTime(AnimatorExtensions.GetStateName("Jump"), kJumpAnimationTransitionTime, AnimatorExtensions.kBaseLayerValue);
+
+        SFXManager.PlayClip2D(sfxjump.clip, sfxjump.volume, 1.0f / mass);
     }
 
     public void SpawnedFrom(PlayerSlime slime)
@@ -351,6 +363,12 @@ public class PlayerSlime : MonoBehaviour
             return;
 
         lasthittime = Time.time;
+        SFXManager.PlayClip2D(sfxpop.clip, sfxpop.volume, 1.0f / mass);
+
+        ParticleSlimeChunks particles = GameObject.Instantiate(prefabslimechunks);
+        particles.transform.position = point;
+        particles.transform.rotation = Quaternion.LookRotation(normal);
+        particles.Initialize(mass);
         Split();
     }
 

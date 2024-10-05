@@ -6,7 +6,7 @@ using UnityEngine;
 public class MusicManager : MonoBehaviour
 {
     private static MusicManager instance = null;
-    private static float gTargetVolume = 1.0f;
+    private static float gTargetVolume = 0.3f;
 
     [SerializeField]
     private AudioClip levelmusic;
