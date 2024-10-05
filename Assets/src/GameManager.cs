@@ -1,0 +1,51 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+[DefaultExecutionOrder(ExecutionOrders.kGameManager)]
+public class GameManager : MonoBehaviour
+{
+    private static GameManager instance;
+    public static bool gPaused = false;
+
+    void Awake()
+    {
+        if(instance != null)
+        {
+            GameObject.Destroy(this.gameObject);
+            return;
+        }
+
+        instance = this;
+        GameObject.DontDestroyOnLoad(this.gameObject);
+
+        GUIExtensions.ResetGlobals();
+    }
+
+    // Start is called before the first frame update
+    void Start()
+    {
+        
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        
+    }
+
+    private void OnGUI()
+    {
+        GUIExtensions.ResetGlobals();
+    }
+
+    public static void Pause()
+    {
+        gPaused = true;
+    }
+
+    public static void Unpause()
+    {
+        gPaused = true;
+    }
+}
