@@ -33,6 +33,13 @@ public class PlayerSlimeCamera : MonoBehaviour
     [SerializeField]
     private float yawamount = 0.0f;
 
+    private Vector3 lasttargetpos;
+
+    void Awake()
+    {
+        lasttargetpos = transform.position;
+    }
+
     void Update()
     {
         if(PlayerInput.RotateCamera())
@@ -51,7 +58,7 @@ public class PlayerSlimeCamera : MonoBehaviour
     {
         float smallestmass = target.LargestMass();
         int currentoffset = LargestMassToTargetIndex(smallestmass);
-        Vector3 slimemidpointtarget = target.CameraTargetPosition();
+        Vector3 slimemidpointtarget = target.CameraTargetPosition(lasttargetpos);
 
         // -- rotate offset by pitch/yaw camera angle controls
         Quaternion offsetrot = Quaternion.Euler(pitchamount, yawamount, 0.0f);
@@ -66,6 +73,8 @@ public class PlayerSlimeCamera : MonoBehaviour
         Quaternion targetrot = Quaternion.LookRotation(totargetpos);
         transform.rotation = Quaternion.Slerp(transform.rotation, targetrot, rotationslerp);
         transform.eulerAngles = transform.eulerAngles.NoZ();
+
+        lasttargetpos = targetpos;
     }
 
     private int LargestMassToTargetIndex(float largest)

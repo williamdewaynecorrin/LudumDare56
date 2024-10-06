@@ -209,8 +209,8 @@ public class PlayerSlimeManager : MonoBehaviour
             angle += angleinc;
         }
 
-        // -- zoom to fit
-        camera.ZoomToFit();
+        //// -- zoom to fit
+        //camera.ZoomToFit();
     }
 
     public float LargestMass()
@@ -271,8 +271,11 @@ public class PlayerSlimeManager : MonoBehaviour
         GameObject.Destroy(other.Root.gameObject);
     }
 
-    public Vector3 CameraTargetPosition()
+    public Vector3 CameraTargetPosition(Vector3 defaultpos)
     {
+        if(slimes.Count == 0)
+            return defaultpos;
+
         Vector3 mp = Vector3.zero;
         foreach(PlayerSlimeRoot slime in slimes)
         {
