@@ -397,6 +397,16 @@ public class PlayerSlime : MonoBehaviour
         parent.Die();
     }
 
+    public void Pause()
+    {
+        animator.speed = 0f;
+    }
+
+    public void Unpause()
+    {
+        animator.speed = 1.0f / mass;
+    }
+
     public void OnHit(Vector3 point, Vector3 normal)
     {
         if (lasthittime + invulnerabilitytime > Time.time)

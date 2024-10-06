@@ -17,7 +17,7 @@ public static class PlayerInput
 
     public static bool JumpStart()
     {
-        return Input.GetKeyDown(KeyCode.Space);
+        return Input.GetKey(KeyCode.Space);
     }
 
     public static bool JumpEnd()
@@ -27,7 +27,7 @@ public static class PlayerInput
 
     public static bool DialogueAdvance()
     {
-        return Input.GetKeyDown(KeyCode.Space) || Input.GetMouseButtonDown(0);
+        return Input.GetKeyDown(KeyCode.Space);
     }
 
     public static Vector2 MouseDelta()

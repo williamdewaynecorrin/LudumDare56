@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class PlayerSlimeRoot : MonoBehaviour
@@ -10,6 +11,7 @@ public class PlayerSlimeRoot : MonoBehaviour
     private PlayerSlimeManager spawner;
 
     public PlayerSlime Slime => playerslime;
+    public PlayerSlimeManager Spawner => spawner;
 
     public void OnSpawn(PlayerSlimeManager manager, float mass, float lasthittime)
     {
@@ -42,5 +44,15 @@ public class PlayerSlimeRoot : MonoBehaviour
     public void Die()
     {
         spawner.Die(this);
+    }
+
+    public void Pause()
+    {
+        playerslime.Pause();
+    }
+
+    public void Unpause()
+    {
+        playerslime.Unpause();
     }
 }

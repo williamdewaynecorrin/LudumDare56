@@ -9,10 +9,16 @@ public class GameManager : MonoBehaviour
     public static bool gPaused = false;
     public static bool gDialogueOpen = false;
 
+    [SerializeField]
+    private PlayerSlimeManager playermanager;
+
     void Awake()
     {
         if(instance != null)
         {
+            if (instance.playermanager != null)
+                instance.playermanager = playermanager;
+
             GameObject.Destroy(this.gameObject);
             return;
         }
@@ -43,20 +49,27 @@ public class GameManager : MonoBehaviour
     public static void Pause()
     {
         gPaused = true;
+        instance.playermanager.Pause();
     }
 
     public static void Unpause()
     {
         gPaused = true;
+        instance.playermanager.Unpause();
     }
 
     public static void DialogueActivated(bool activated)
     {
         gDialogueOpen = activated;
 
+
         if(activated)
         {
-            //PlayerSlimeManager
+            instance.playermanager.Pause();
+        }
+        else
+        {
+            instance.playermanager.Unpause();
         }
     }
 }

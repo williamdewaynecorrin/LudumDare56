@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -7,6 +8,7 @@ public class PlayerSlimeManager : MonoBehaviour
     private const float kOneMassToRadius = 1.54f; // character controller radius on a 1-mass slime is 0.77, so this includes padding
     private const float kSlimeTargetCastDistance = 10.0f;
 
+    [Header("Connections")]
     [SerializeField]
     private PlayerSlimeRoot slimeprefab;
     [SerializeField]
@@ -19,11 +21,26 @@ public class PlayerSlimeManager : MonoBehaviour
     private new PlayerSlimeCamera camera;
     [SerializeField]
     private LayerMask groundmask;
+    [SerializeField]
+    private UIHUD hud;
+
+    [Header("Happenings")]
+    [SerializeField]
+    private UIHappening uihappening;
+    [SerializeField]
+    private Vector3 happeningoffset;
+    [SerializeField]
+    private Sprite recallsprite;
+    [SerializeField]
+    private AudioClipWVolPitch sfxrecall;
+    [SerializeField]
+    private AudioClipWVol sfxdeath;
 
     private List<PlayerSlimeRoot> slimes;
     private bool isrecalling = false;
     private Vector3 slimetarget;
     private float slimemasstotal;
+    private Checkpoint lastcheckpoint;
 
     public PlayerSlimeCamera Camera => camera;
     public float SlimeMass => slimemasstotal;
@@ -34,10 +51,7 @@ public class PlayerSlimeManager : MonoBehaviour
         // -- start with one full mass slime
         slimes = new List<PlayerSlimeRoot>();
 
-        PlayerSlimeRoot rootslime = GameObject.Instantiate(slimeprefab, transform);
-        rootslime.OnSpawn(this, startingmass, Time.time);
-        rootslime.SetTargetLocalPosition(Vector3.zero);
-        slimes.Add(rootslime);
+        SpawnRootSlime();
     }
 
     void Update()
@@ -49,7 +63,7 @@ public class PlayerSlimeManager : MonoBehaviour
 
         if (!isrecalling)
         {
-            bool canrecall = true;
+            bool canrecall = slimes.Count > 1;
             foreach (PlayerSlimeRoot slimeroot in slimes)
             {
                 if (!slimeroot.Slime.Grounded)
@@ -66,6 +80,9 @@ public class PlayerSlimeManager : MonoBehaviour
                 {
                     slimetarget = SlimeTargetRecallPosition();
                     isrecalling = true;
+                    uihappening.Activate(true, recallsprite);
+
+                    SFXManager.PlayClip2D(sfxrecall.clip, sfxrecall.volume, sfxrecall.pitch.PickValue());
 
                     Vector3 forward = camera.transform.forward.NoY().normalized;
                     Vector3 right = camera.transform.right.NoY().normalized;
@@ -110,6 +127,7 @@ public class PlayerSlimeManager : MonoBehaviour
         }
         else
         {
+            uihappening.transform.position = slimetarget + happeningoffset;
             bool recallfinished = true;
             foreach (PlayerSlimeRoot slimeroot in slimes)
             {
@@ -123,12 +141,28 @@ public class PlayerSlimeManager : MonoBehaviour
             if(recallfinished)
             {
                 isrecalling = false;
+                uihappening.Activate(false);
                 foreach (PlayerSlimeRoot slimeroot in slimes)
                 {
                     slimeroot.Slime.EndRecall();
                 }
             }
         }
+    }
+
+    public void SetLastCheckpoint(Checkpoint point)
+    {
+        lastcheckpoint = point;
+    }
+
+    private PlayerSlimeRoot SpawnRootSlime()
+    {
+        PlayerSlimeRoot rootslime = GameObject.Instantiate(slimeprefab, transform);
+        rootslime.OnSpawn(this, startingmass, Time.time);
+        rootslime.SetTargetLocalPosition(Vector3.zero);
+        slimes.Add(rootslime);
+
+        return rootslime;
     }
 
     private void UpdateStats()
@@ -138,6 +172,22 @@ public class PlayerSlimeManager : MonoBehaviour
         foreach(PlayerSlimeRoot slimeroot in slimes)
         {
             slimemasstotal += slimeroot.Slime.Mass;
+        }
+    }
+
+    public void Pause()
+    {
+        foreach (PlayerSlimeRoot slimeroot in slimes)
+        {
+            slimeroot.Pause();
+        }
+    }
+
+    public void Unpause()
+    {
+        foreach (PlayerSlimeRoot slimeroot in slimes)
+        {
+            slimeroot.Unpause();
         }
     }
 
@@ -182,6 +232,34 @@ public class PlayerSlimeManager : MonoBehaviour
         slimes.Remove(root);
 
         GameObject.Destroy(root.gameObject);
+
+        if(slimes.Count == 0)
+        {
+            SFXManager.PlayClip2D(sfxdeath.clip, sfxdeath.volume);
+            StartCoroutine(Respawn());
+        }
+    }
+
+    private IEnumerator Respawn()
+    {
+        hud.SetDeathScreen(3);
+        yield return new WaitForSeconds(1.0f);
+        hud.SetDeathScreen(2);
+        yield return new WaitForSeconds(1.0f);
+        hud.SetDeathScreen(1);
+        yield return new WaitForSeconds(1.0f);
+        hud.HideDeathScreen();
+
+        Vector3 checkpos = lastcheckpoint.Pos;
+        Quaternion checkrot = lastcheckpoint.Rot;
+
+        PlayerSlimeRoot rootslime = SpawnRootSlime();
+        rootslime.Slime.Character.enabled = false;
+        rootslime.Slime.transform.position = checkpos;
+        rootslime.Slime.transform.rotation = checkrot;
+        rootslime.Slime.Character.enabled = true;
+
+        yield return null;
     }
 
     public void Combine(PlayerSlimeRoot survivor, PlayerSlime other)

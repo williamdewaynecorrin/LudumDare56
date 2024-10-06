@@ -18,13 +18,14 @@ public class MusicManager : MonoBehaviour
         if(instance != null)
         {
             instance.levelmusic = levelmusic;
-            PlayTrack();
+            instance.PlayTrack();
             GameObject.Destroy(this.gameObject);
             return;
         }
 
         instance = this;
         source = GetComponent<AudioSource>();
+        instance.source.loop = true;
         PlayTrack();
         GameObject.DontDestroyOnLoad(this.gameObject);
     }
@@ -36,32 +37,32 @@ public class MusicManager : MonoBehaviour
 
     private IEnumerator PlayTrackRoutine()
     {
-        if (source.isPlaying)
+        if (instance.source.isPlaying)
         {
             int fadeoutframes = 50;
-            float voldec = source.volume / (float)fadeoutframes;
+            float voldec = instance.source.volume / (float)fadeoutframes;
             for(int i = 0; i < fadeoutframes; ++i)
             {
-                source.volume -= voldec;
+                instance.source.volume -= voldec;
                 yield return new WaitForFixedUpdate();
             }
 
-            source.volume = 0.0f;
-            source.Stop();
+            instance.source.volume = 0.0f;
+            instance.source.Stop();
         }
 
-        source.volume = 0.0f;
-        source.clip = levelmusic;
-        source.Play();
+        instance.source.volume = 0.0f;
+        instance.source.clip = instance.levelmusic;
+        instance.source.Play();
 
         int fadeinframes = 50;
         float volinc = gTargetVolume / (float)fadeinframes;
         for (int i = 0; i < fadeinframes; ++i)
         {
-            source.volume += volinc;
+            instance.source.volume += volinc;
             yield return new WaitForFixedUpdate();
         }
 
-        source.volume = gTargetVolume;
+        instance.source.volume = gTargetVolume;
     }
 }

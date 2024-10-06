@@ -14,10 +14,10 @@ public class ParticleSlimeChunks : MonoBehaviour
         ParticleSystem.MainModule chunksmain = chunks.main;
 
         // -- speed
-        chunksmain.startSpeedMultiplier /= mass;
+        chunksmain.startSpeedMultiplier *= mass;
 
         // -- size
-        chunksmain.startSizeMultiplier /= mass;
+        chunksmain.startSizeMultiplier *= mass;
 
         // -- gravity
         ParticleSystem.MinMaxCurve chunksgravity = chunksmain.gravityModifier;

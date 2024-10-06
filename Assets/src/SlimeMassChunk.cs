@@ -9,6 +9,8 @@ public class SlimeMassChunk : MonoBehaviour
     [Range(0.001f, 0.1f)]
     private float mass = 0.01f;
     [SerializeField]
+    private float above = 0.3f;
+    [SerializeField]
     private AudioClipWVolPitch sfxcollect;
     [SerializeField]
     private GameObject fxcollectprefab;
@@ -25,8 +27,7 @@ public class SlimeMassChunk : MonoBehaviour
             SFXManager.PlayClip3D(sfxcollect.clip, transform.position, sfxcollect.volume, sfxcollect.pitch.PickValue());
 
             GameObject fxinstance = GameObject.Instantiate(fxcollectprefab);
-            fxinstance.transform.position = transform.position;
-            fxinstance.transform.rotation = transform.rotation;
+            fxinstance.transform.position = transform.position + Vector3.up * above;
             GameObject.Destroy(fxinstance, fxlifetime);
 
             GameManager.Destroy(this.gameObject);

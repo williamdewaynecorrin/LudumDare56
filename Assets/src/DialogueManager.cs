@@ -157,6 +157,7 @@ public class DialogueManager : MonoBehaviour
     public void Open()
     {
         GameManager.DialogueActivated(true);
+        dialoguedisplay.text = "";
         SFXManager.PlayClip2D(sfxopen.clip, sfxopen.volume);
         StartCoroutine(OpenRoutine());
     }

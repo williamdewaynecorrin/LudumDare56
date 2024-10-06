@@ -226,7 +226,7 @@ MonoBehaviour:
   jumpsquishtimeclipref: {fileID: 7400000, guid: 9212e4cbabea1274ca85276ace3e3b79, type: 2}
   jumpsquishmovemultstart: 1
   jumpsquishmovemultend: 0.15
-  invulnerabilitytime: 2
+  invulnerabilitytime: 0.3
   recallrotatespeed: 10
   maxrecallspeed: 0.2
   prefabslimechunks: {fileID: 7430408181115695061, guid: 1c2fdb1ba8af7c543a7007128866fa01, type: 3}

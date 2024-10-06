@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class UIHUD : MonoBehaviour
 {
-    private const float kSlimeMassToKG = 100.0f;
+    public const float kSlimeMassToKG = 100.0f;
 
     [SerializeField]
     private PlayerSlimeManager playermanager;
@@ -18,9 +18,20 @@ public class UIHUD : MonoBehaviour
     [SerializeField]
     private UIButtonPanel[] buttonpanels;
     [SerializeField]
+    private Text deathtimetext;
+    [SerializeField]
+    private GameObject deathpanel;
+    [SerializeField]
     private AudioClipWVol sfxclick;
     [SerializeField]
     private AudioClipWVol sfxletgo;
+    [SerializeField]
+    private AudioClipWVol sfxdeathtimer;
+
+    void Awake()
+    {
+        HideDeathScreen();
+    }
 
     void Update()
     {
@@ -40,5 +51,17 @@ public class UIHUD : MonoBehaviour
                 SFXManager.PlayClip2D(sfxletgo.clip, sfxletgo.volume);
             }
         }
+    }
+
+    public void SetDeathScreen(int time)
+    {
+        deathpanel.SetActive(true);
+        deathtimetext.text = time.ToString();
+        SFXManager.PlayClip2D(sfxdeathtimer.clip, sfxdeathtimer.volume);
+    }
+
+    public void HideDeathScreen()
+    {
+        deathpanel.SetActive(false);
     }
 }
