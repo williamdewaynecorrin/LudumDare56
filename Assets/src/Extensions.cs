@@ -12,6 +12,11 @@ public static class Extensions
     {
         return new Vector3(v.x, v.y, 0.0f);
     }
+
+    public static Color Multiply(this Color c, Color other)
+    {
+        return new Color(c.r * other.r, c.g * other.g, c.b * other.b, c.a * other.a);
+    }
 }
 
 public static class PhysicsExtensions

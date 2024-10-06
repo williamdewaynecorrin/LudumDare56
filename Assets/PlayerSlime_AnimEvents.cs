@@ -60,3 +60,12 @@ public class AudioClipWVol
     [Range(0f, 1f)]
     public float volume = 1.0f;
 }
+
+[System.Serializable]
+public class AudioClipWVolPitch
+{
+    public AudioClip clip;
+    [Range(0f, 1f)]
+    public float volume = 1.0f;
+    public MinMaxFloat pitch;
+}

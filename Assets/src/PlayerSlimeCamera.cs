@@ -8,6 +8,8 @@ public class PlayerSlimeCamera : MonoBehaviour
     private PlayerSlimeManager target;
     [SerializeField]
     private SlimeCameraOffset[] targetoffsets; /* = new Vector3(0f, 2.88f, -5.65f);*/
+    [SerializeField]
+    private Camera cam;
     [Range(0.0f, 1.0f)]
     [SerializeField]
     private float positionlerp = 0.1f;
@@ -26,13 +28,14 @@ public class PlayerSlimeCamera : MonoBehaviour
     private bool invertpitch = false;
     [SerializeField]
     private bool invertyaw = false;
-
+    [SerializeField]
     private float pitchamount = 0.0f;
+    [SerializeField]
     private float yawamount = 0.0f;
 
     void Update()
     {
-        if(Input.GetMouseButton(1))
+        if(PlayerInput.RotateCamera())
         {
             Vector2 mousedelta = PlayerInput.MouseDelta();
             float addpitch = pitchsensitivity * -mousedelta.y;
@@ -81,9 +84,35 @@ public class PlayerSlimeCamera : MonoBehaviour
 
     private void OnGUI()
     {
+        return;
+
         GUIExtensions.GlobalHeader("CAMERA");
         GUIExtensions.GlobalLabel(string.Format("Current Pitch: {0}", pitchamount.ToString("F3")));
         GUIExtensions.GlobalLabel(string.Format("Current YAW: {0}", yawamount.ToString("F3")));
+    }
+
+    private Bounds GetBoundsFor(GameObject obj)
+    {
+        Bounds fullbounds = new Bounds(obj.transform.position, Vector3.zero);
+        Renderer[] rends = obj.GetComponentsInChildren<Renderer>();
+        foreach(Renderer r in rends)
+        {
+            fullbounds.Encapsulate(r.bounds);
+        }
+
+        return fullbounds;
+    }
+
+    public void ZoomToFit()
+    {
+        return;
+
+        Bounds targetbounds = GetBoundsFor(target.gameObject);
+        Vector3 size = targetbounds.size;
+        float cameradiagonal = size.magnitude;
+
+        cam.orthographicSize = cameradiagonal / 2.0f;
+        transform.position = targetbounds.center;
     }
 }
 

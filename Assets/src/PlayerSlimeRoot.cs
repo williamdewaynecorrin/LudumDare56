@@ -33,4 +33,14 @@ public class PlayerSlimeRoot : MonoBehaviour
 
         spawner.SpawnSlime(this, newmass);
     }
+
+    public void Combine(PlayerSlime other)
+    {
+        spawner.Combine(this, other);
+    }
+
+    public void Die()
+    {
+        spawner.Die(this);
+    }
 }

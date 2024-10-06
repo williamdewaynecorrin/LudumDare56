@@ -208,7 +208,7 @@ MonoBehaviour:
     useanimclip: 1
     animref: {fileID: 7400000, guid: 80a09033d17ea0d46882b6c3a6305791, type: 2}
     curvetime: 1
-  standardgluetogrounddist: 0.4
+  standardgluetogrounddist: 0.15
   groundmask:
     serializedVersion: 2
     m_Bits: 64
@@ -228,14 +228,22 @@ MonoBehaviour:
   jumpsquishmovemultend: 0.15
   invulnerabilitytime: 2
   recallrotatespeed: 10
-  maxrecallspeed: 0.05
+  maxrecallspeed: 0.2
   prefabslimechunks: {fileID: 7430408181115695061, guid: 1c2fdb1ba8af7c543a7007128866fa01, type: 3}
+  fxcombineprefab: {fileID: 831989153876619468, guid: a679d72d82fd74e43b36d9481d1f8d09, type: 3}
+  fxcombinelifetime: 2
   sfxpop:
     clip: {fileID: 8300000, guid: 969d2537d3e51854485103c691a3db7c, type: 3}
     volume: 1
   sfxjump:
     clip: {fileID: 8300000, guid: 200b7cb2d142262428c4fa199b993820, type: 3}
     volume: 1
+  sfxcombine:
+    clip: {fileID: 8300000, guid: 9b8e404af8d08df44969f83494a0ccf4, type: 3}
+    volume: 0.6
+  sfxdie:
+    clip: {fileID: 8300000, guid: ea2afc10570149b4cafa13a2a8d7e157, type: 3}
+    volume: 0.75
 --- !u!143 &4023241420732051647
 CharacterController:
   m_ObjectHideFlags: 0

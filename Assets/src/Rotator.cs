@@ -21,15 +21,24 @@ public class Rotator : MonoBehaviour
         rotateaxis.Normalize();
         previousr = transform.localRotation.y;
         lastdir = true;
-        whooshparticles.Stop();
+
+        if(whooshparticles != null)
+            whooshparticles.Stop();
     }
 
     void FixedUpdate()
     {
+        if (GameManager.gDialogueOpen || GameManager.gPaused)
+            return;
+
         previousr = transform.localRotation.y;
         transform.localRotation *= Quaternion.AngleAxis(rotatespeed, rotateaxis);
-        float curr = transform.localRotation.y;
 
+        // -- we don't care about calculating complete rotations if there are no effects to play
+        if (whooshparticles == null)
+            return;
+
+        float curr = transform.localRotation.y;
         if(curr - previousr < 0)
         {
             if(lastdir)

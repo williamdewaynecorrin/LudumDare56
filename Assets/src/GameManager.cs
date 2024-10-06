@@ -7,6 +7,7 @@ public class GameManager : MonoBehaviour
 {
     private static GameManager instance;
     public static bool gPaused = false;
+    public static bool gDialogueOpen = false;
 
     void Awake()
     {
@@ -47,5 +48,15 @@ public class GameManager : MonoBehaviour
     public static void Unpause()
     {
         gPaused = true;
+    }
+
+    public static void DialogueActivated(bool activated)
+    {
+        gDialogueOpen = activated;
+
+        if(activated)
+        {
+            //PlayerSlimeManager
+        }
     }
 }

@@ -81,12 +81,20 @@ public class PlayerSlime : MonoBehaviour
     [Header("FX")]
     [SerializeField]
     private ParticleSlimeChunks prefabslimechunks;
+    [SerializeField]
+    private GameObject fxcombineprefab;
+    [SerializeField]
+    private float fxcombinelifetime = 2.0f;
 
     [Header("SFX")]
     [SerializeField]
     private AudioClipWVol sfxpop;
     [SerializeField]
     private AudioClipWVol sfxjump;
+    [SerializeField]
+    private AudioClipWVol sfxcombine;
+    [SerializeField]
+    private AudioClipWVol sfxdie;
 
     private Vector2 movementinput;
     private Vector3 currentvelocity;
@@ -112,6 +120,7 @@ public class PlayerSlime : MonoBehaviour
     public CharacterController Character => character;
     public bool Grounded => grounded;
     public bool ReachedTarget => reachedtarget;
+    public PlayerSlimeRoot Root => parent;
 
     void Awake()
     {
@@ -125,7 +134,10 @@ public class PlayerSlime : MonoBehaviour
 
     void Update()
     {
-        if(movemode == ESlimeMoveMode.eTarget)
+        if (GameManager.gDialogueOpen || GameManager.gPaused)
+            return;
+
+        if (movemode == ESlimeMoveMode.eTarget)
         {
             return;
         }
@@ -176,12 +188,16 @@ public class PlayerSlime : MonoBehaviour
 
     void FixedUpdate()
     {
-        if(movemode == ESlimeMoveMode.eTarget)
+        if (GameManager.gDialogueOpen || GameManager.gPaused)
+            return;
+
+        if (movemode == ESlimeMoveMode.eTarget)
         {
+            transform.Rotate(randomrecallaxis * recallrotatespeed);
+
             if (reachedtarget)
                 return;
 
-            transform.Rotate(randomrecallaxis * recallrotatespeed);
             Vector3 totarget = recalltarget - transform.position;
             if(totarget.magnitude <= kReachedTargetThresh)
             {
@@ -334,6 +350,11 @@ public class PlayerSlime : MonoBehaviour
         playercam = camera;
     }
 
+    public void AddMass(float mass)
+    {
+        SetMass(this.mass + mass, false);
+    }
+
     public void SetMass(float newmass, bool immediate)
     {
         mass = newmass;
@@ -355,6 +376,25 @@ public class PlayerSlime : MonoBehaviour
     public void Split()
     {
         parent.Split();
+    }
+
+    public void Combine(PlayerSlime other)
+    {
+        GameObject fxcombineinst = GameObject.Instantiate(fxcombineprefab);
+        fxcombineinst.transform.position = transform.position;
+        fxcombineinst.transform.rotation = transform.rotation;
+        GameManager.Destroy(fxcombineinst, fxcombinelifetime);
+
+        parent.Combine(other);
+
+        // -- mass will be combined in between combine call and here
+        SFXManager.PlayClip2D(sfxcombine.clip, sfxcombine.volume, 1.0f / mass);
+    }
+
+    public void Die()
+    {
+        SFXManager.PlayClip2D(sfxdie.clip, sfxdie.volume, 1.0f / mass);
+        parent.Die();
     }
 
     public void OnHit(Vector3 point, Vector3 normal)
@@ -401,6 +441,8 @@ public class PlayerSlime : MonoBehaviour
 
     private void OnGUI()
     {
+        return;
+
         GUIExtensions.GlobalHeader("PLAYER");
         GUIExtensions.GlobalLabel(string.Format("Grounded: {0}", grounded));
         GUIExtensions.GlobalLabel(string.Format("Jumped: {0}", jumped));

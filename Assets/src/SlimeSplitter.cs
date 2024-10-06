@@ -27,6 +27,15 @@ public class SlimeSplitter : MonoBehaviour
         }
     }
 
+    private void OnCollisionEnter(Collision coll)
+    {
+        PlayerSlime slime = coll.gameObject.GetComponent<PlayerSlime>();
+        if (slime != null)
+        {
+            slime.OnHit(coll.contacts[0].point, coll.contacts[0].normal);
+        }
+    }
+
     private void OnTriggerEnter(Collider collider)
     {
         PlayerSlime slime = collider.gameObject.GetComponent<PlayerSlime>();

@@ -13,10 +13,32 @@ public class UIHUD : MonoBehaviour
     private Text slimecount;
     [SerializeField]
     private Text mass;
+    [SerializeField]
+    private Color panelusecolor = Color.yellow;
+    [SerializeField]
+    private UIButtonPanel[] buttonpanels;
+    [SerializeField]
+    private AudioClipWVol sfxclick;
+    [SerializeField]
+    private AudioClipWVol sfxletgo;
 
     void Update()
     {
         slimecount.text = playermanager.SlimeCount.ToString();
         mass.text = (playermanager.SlimeMass * kSlimeMassToKG).ToString("F1");
+
+        foreach (UIButtonPanel panel in buttonpanels)
+        {
+            if (Input.GetKeyDown(panel.Key))
+            {
+                panel.Shade(panelusecolor);
+                SFXManager.PlayClip2D(sfxclick.clip, sfxclick.volume);
+            }
+            else if (Input.GetKeyUp(panel.Key))
+            {
+                panel.ResetTints();
+                SFXManager.PlayClip2D(sfxletgo.clip, sfxletgo.volume);
+            }
+        }
     }
 }
