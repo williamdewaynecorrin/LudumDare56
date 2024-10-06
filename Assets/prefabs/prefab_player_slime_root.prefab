@@ -216,8 +216,8 @@ MonoBehaviour:
   stopfriction: 0.9
   stopfrictioninair: 0.96
   maxspeed: 0.1
-  acceleration: 0.05
-  accelerationinair: 0.01
+  acceleration: 0.01
+  accelerationinair: 0.005
   rotationslerp: 0.1
   scalelerp: 0.1
   standardstepoffset: 0.15
